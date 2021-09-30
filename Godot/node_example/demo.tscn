@@ -1,0 +1,65 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://file_downloader.gd" type="Script" id=1]
+[ext_resource path="res://node_example/demo.gd" type="Script" id=2]
+
+[node name="Control" type="Panel"]
+anchor_right = 0.479
+anchor_bottom = 0.555
+margin_right = 0.503967
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FileDownloader" type="HTTPRequest" parent="."]
+script = ExtResource( 1 )
+file_urls = [ "https://docs.godotengine.org/en/stable/_static/docs_logo.png", "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh", "https://downloads.tuxfamily.org/godotengine/3.3.3/Godot_v3.3.3-stable_win32.exe.zip" ]
+
+[node name="Button" type="Button" parent="."]
+margin_left = 134.036
+margin_top = 193.127
+margin_right = 341.036
+margin_bottom = 257.127
+text = "Start download"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+margin_left = 115.056
+margin_top = 119.168
+margin_right = 372.056
+margin_bottom = 167.168
+step = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_left = 151.888
+margin_top = 72.3826
+margin_right = 332.888
+margin_bottom = 109.383
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="."]
+margin_left = 167.673
+margin_top = 271.617
+margin_right = 312.673
+margin_bottom = 311.617
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="downloads_finished" from="FileDownloader" to="." method="_on_FileDownloader_downloads_finished"]
+[connection signal="downloads_started" from="FileDownloader" to="." method="_on_FileDownloader_downloads_started"]
+[connection signal="file_downloaded" from="FileDownloader" to="." method="_on_FileDownloader_file_downloaded"]
+[connection signal="stats_updated" from="FileDownloader" to="." method="_on_FileDownloader_stats_updated"]
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
