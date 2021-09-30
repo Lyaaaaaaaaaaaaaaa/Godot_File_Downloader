@@ -14,7 +14,7 @@ __meta__ = {
 
 [node name="FileDownloader" type="HTTPRequest" parent="."]
 script = ExtResource( 1 )
-file_urls = [ "https://docs.godotengine.org/en/stable/_static/docs_logo.png", "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh", "https://downloads.tuxfamily.org/godotengine/3.3.3/Godot_v3.3.3-stable_win32.exe.zip" ]
+file_urls = PoolStringArray( "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh", "https://docs.godotengine.org/en/stable/_static/docs_logo.png", "https://downloads.tuxfamily.org/godotengine/3.3.3/Godot_v3.3.3-stable_win64.exe.zip" )
 
 [node name="Button" type="Button" parent="."]
 margin_left = 134.036

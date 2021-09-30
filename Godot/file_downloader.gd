@@ -13,6 +13,9 @@
 #--
 #--  - 23/09/2021 Lyaaaaa
 #--    - Implemented the file.
+#--
+#--  - 30/09/2021 Lyaaaaa
+#--    - file_urls is now of PoolStringArray type.
 #------------------------------------------------------------------------------
 class_name FileDownloader
     # This class aims to make easier the implementation of file downloads.
@@ -24,7 +27,7 @@ signal downloads_finished
 signal stats_updated
 
 export(String)        var save_path    : String = "res://cache/"
-export(Array, String) var file_urls    : Array
+export(PoolStringArray) var file_urls  : PoolStringArray
 
 var _current_url       : String
 var _current_url_index : int = 0
