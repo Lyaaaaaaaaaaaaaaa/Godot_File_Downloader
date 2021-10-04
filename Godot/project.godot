@@ -9,11 +9,6 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "HTTPRequest",
-"class": "FileDownloader",
-"language": "GDScript",
-"path": "res://addons/file_downloader/file_downloader.gd"
-}, {
 "base": "Reference",
 "class": "WAT",
 "language": "GDScript",
@@ -25,7 +20,6 @@ _global_script_classes=[ {
 "path": "res://addons/WAT/test/test.gd"
 } ]
 _global_script_class_icons={
-"FileDownloader": "",
 "WAT": "",
 "WATTest": ""
 }

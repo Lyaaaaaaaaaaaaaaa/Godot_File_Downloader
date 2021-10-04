@@ -28,9 +28,10 @@
 #--        file before calling .get_len on it. 
 #--    - _downloaded_percent is now a float to avoid warning because I converted
 #--        float to int.
+#--    - **It is no longer a class** as it was making duplication with the plugin.gd
+#--        which declared this script as a subtype of HTTPRequest named FileDownloader.
+#--        This way seems to be more 'plugin' like.
 #------------------------------------------------------------------------------
-class_name FileDownloader
-    # This class aims to make easier the implementation of file downloads.
 extends HTTPRequest
 
 signal downloads_started
