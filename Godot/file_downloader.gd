@@ -16,6 +16,12 @@
 #--
 #--  - 30/09/2021 Lyaaaaa
 #--    - file_urls is now of PoolStringArray type.
+#--
+#--  - 04/09/2021 Lyaaaaa
+#--    - Updated _calculate_percentage to control if it successfully opened the
+#--        file before calling .get_len on it. 
+#--    - _downloaded_percent is now a float to avoid warning because I converted
+#--        float to int.
 #------------------------------------------------------------------------------
 class_name FileDownloader
     # This class aims to make easier the implementation of file downloads.
@@ -38,7 +44,7 @@ var _file_size : float
 
 var _headers   : Array = []
 
-var _downloaded_percent : int   = 0
+var _downloaded_percent : float = 0
 var _downloaded_size    : float = 0
 
 var _last_method : int
@@ -109,11 +115,13 @@ func _update_stats() -> void:
 
 
 func _calculate_percentage() -> void:
-    _file.open(save_path + _file_name, File.READ)
+    var error : int
+    error = _file.open(save_path + _file_name, File.READ)
 
-    _downloaded_size    = _file.get_len()
-    _downloaded_percent = float((_downloaded_size / _file_size)) *100
-    
+    if error == OK:
+        _downloaded_size    = _file.get_len()
+        _downloaded_percent = float((_downloaded_size / _file_size)) *100
+        
 
 func _create_directory() -> void:
     var directory = Directory.new()

@@ -47,9 +47,17 @@ config/name="File Downloader Example"
 run/main_scene="res://node_example/demo.tscn"
 config/icon="res://icon.png"
 
+[debug]
+
+gdscript/warnings/return_value_discarded=false
+
 [editor_plugins]
 
 enabled=PoolStringArray( "res://addons/WAT/plugin.cfg" )
+
+[global]
+
+unused=false
 
 [physics]
 
