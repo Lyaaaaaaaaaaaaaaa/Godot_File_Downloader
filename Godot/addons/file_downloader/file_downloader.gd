@@ -7,6 +7,12 @@
 #--  - You can use this class as a node by directly using it in a scene or in a
 #--      script by instancing the class.
 #--
+#-- Anticipated changes:
+#--
+#--  - Get rid of the _process function and let the user manually call get_stats
+#--      (which would call _update_stats) on purpose instead of spaming the 
+#--      stats_updated signal.
+#--
 #-- Changelog:
 #--  - 15/09/2021 Lyaaaaa
 #--    - Created the file.
@@ -32,8 +38,8 @@ signal file_downloaded
 signal downloads_finished
 signal stats_updated
 
-export(String)        var save_path    : String = "res://cache/"
-export(PoolStringArray) var file_urls  : PoolStringArray
+export(String)          var save_path : String = "res://cache/"
+export(PoolStringArray) var file_urls : PoolStringArray
 
 var _current_url       : String
 var _current_url_index : int = 0

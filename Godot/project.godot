@@ -12,7 +12,7 @@ _global_script_classes=[ {
 "base": "HTTPRequest",
 "class": "FileDownloader",
 "language": "GDScript",
-"path": "res://file_downloader.gd"
+"path": "res://addons/file_downloader/file_downloader.gd"
 }, {
 "base": "Reference",
 "class": "WAT",
@@ -53,7 +53,7 @@ gdscript/warnings/return_value_discarded=false
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/WAT/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/WAT/plugin.cfg", "res://addons/file_downloader/plugin.cfg" )
 
 [global]
 

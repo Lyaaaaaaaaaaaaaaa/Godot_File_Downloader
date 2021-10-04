@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://file_downloader.gd" type="Script" id=1]
+[ext_resource path="res://addons/file_downloader/file_downloader.gd" type="Script" id=1]
 [ext_resource path="res://node_example/demo.gd" type="Script" id=2]
 
 [node name="Control" type="Panel"]
@@ -14,7 +14,7 @@ __meta__ = {
 
 [node name="FileDownloader" type="HTTPRequest" parent="."]
 script = ExtResource( 1 )
-file_urls = PoolStringArray( "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh", "https://docs.godotengine.org/en/stable/_static/docs_logo.png", "https://downloads.tuxfamily.org/godotengine/3.3.3/Godot_v3.3.3-stable_win64.exe.zip" )
+file_urls = PoolStringArray( "https://downloads.tuxfamily.org/godotengine/3.3.4/Godot_v3.3.4-stable_win64.exe.zip", "https://godotengine.org/themes/godotengine/assets/download/godot_logo.svg" )
 
 [node name="Button" type="Button" parent="."]
 margin_left = 134.036
