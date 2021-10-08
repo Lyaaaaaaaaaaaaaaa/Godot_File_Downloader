@@ -25,7 +25,6 @@ func _on_FileDownloader_stats_updated(p_downloaded_size,
 
 
 func _on_FileDownloader_file_downloaded():
-    print("on file downloaded")
     number_of_file_downloaded += 1
     $Label2.text = String(number_of_file_downloaded) + " file downloaded on " + String(number_of_files)
 

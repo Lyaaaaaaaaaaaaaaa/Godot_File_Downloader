@@ -23,7 +23,7 @@
 #--  - 30/09/2021 Lyaaaaa
 #--    - file_urls is now of PoolStringArray type.
 #--
-#--  - 04/09/2021 Lyaaaaa
+#--  - 04/10/2021 Lyaaaaa
 #--    - Updated _calculate_percentage to control if it successfully opened the
 #--        file before calling .get_len on it. 
 #--    - _downloaded_percent is now a float to avoid warning because I converted
@@ -31,6 +31,16 @@
 #--    - **It is no longer a class** as it was making duplication with the plugin.gd
 #--        which declared this script as a subtype of HTTPRequest named FileDownloader.
 #--        This way seems to be more 'plugin' like.
+#--
+#--  - 08/10/2021 Lyaaaaa
+#--    - Removed the _on_file_downloaded handler as it was pretty useless
+#--        and creating errors. Its code is now inside _download_next_file.
+#--    - Removed the connect statement from _init which was connecting to
+#--        _on_file_downloaded.
+#--    - The "downloads_started" signal is now emited inside _send_get_request
+#--        if there is no error.
+#--    - _download_next_file is now called inside _on_request_completed if the
+#--        request was a GET one.
 #------------------------------------------------------------------------------
 extends HTTPRequest
 
@@ -61,7 +71,6 @@ var _ssl         : bool = false
 func _init() -> void:
     set_process(false)
     connect("request_completed", self, "_on_request_completed")
-    connect("file_downloaded"  , self, "_on_file_downloaded")
 
 
 func _ready() -> void:
@@ -103,6 +112,7 @@ func _send_head_request() -> void:
 func _send_get_request() -> void:
     var error = request(_current_url, _headers, _ssl, HTTPClient.METHOD_GET)
     if error == OK:
+        emit_signal("downloads_started")
         _last_method = HTTPClient.METHOD_GET
         set_process(true)
     
@@ -140,12 +150,17 @@ func _create_directory() -> void:
 
 
 func _download_next_file() -> void:
-    emit_signal("downloads_started")
-    _current_url  = file_urls[_current_url_index]
-    _file_name    = _current_url.get_file()
-    download_file = save_path + _file_name
-    _send_head_request()
-    
+    if _current_url_index < file_urls.size():
+        _current_url  = file_urls[_current_url_index]
+        _file_name    = _current_url.get_file()
+        download_file = save_path + _file_name
+        _send_head_request()
+        _current_url_index += 1  
+    else:
+        set_process(false)
+        emit_signal("downloads_finished")
+        _update_stats()
+
 
 func _extract_regex_from_header(p_regex  : String,
                                 p_header : String) -> String:
@@ -174,6 +189,7 @@ func _on_request_completed(p_result,
             _send_get_request()
         elif _last_method == HTTPClient.METHOD_GET:
             emit_signal("file_downloaded")
+            _download_next_file()
     else:
         print("HTTP Request error: ", p_result)
 
