@@ -15,7 +15,36 @@ in Godot.
 
 ## How to install?
 
+1. Download the latest release
+2. Copy the addons folder into your Godot project's folder
+3. Enable the plugin in `Projet`, `Project settings`, `Plugins`.
 
+## How to use?
+
+1. Add a new node to your scene
+2. Search for FileDownloader (It is a child of HTTPRequest)
+3. Add a FileDownloader node in your scene
+4. Clic on node and edit its script variables directly in the editor.
+`File Urls` and `Save_Path`
+5. Now simply call `$FileDownloader.start_download()` somewhere in your script.
+
+*You alternatively can replace the step 4 and 5 by code*
+```
+var url  : PoolStringArray = ["url_to_file1","url_file_2"]
+var path : String          = "user://downloads"
+$FileDownloader.start_download(url, path)
+```
+
+The release ships a demo project. Feel free to run it in Godot and explore it.
+
+## Limitations
+
+For now it seems the FileDownloader doesn't download some files (like .svg)
+This probably comes from the _on_request_completed function which expects to 
+receive specific information. If this information never arrives, it won't start
+the download.
+I should fix this in the future by adding a 'blind' downloading mode. This blind
+mode wouldn't know how big is the file currently downloading until it finishes.
 
 ## More information:
 
