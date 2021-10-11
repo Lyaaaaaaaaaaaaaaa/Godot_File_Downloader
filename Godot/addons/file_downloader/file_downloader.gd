@@ -41,6 +41,9 @@
 #--        if there is no error.
 #--    - _download_next_file is now called inside _on_request_completed if the
 #--        request was a GET one.
+#--
+#--  - 11/10/2021 Lyaaaaa
+#--    - Changed the default value of save_path to user://cache/
 #------------------------------------------------------------------------------
 extends HTTPRequest
 
@@ -49,7 +52,7 @@ signal file_downloaded
 signal downloads_finished
 signal stats_updated
 
-export(String)          var save_path : String = "res://cache/"
+export(String)          var save_path : String = "user://cache/"
 export(PoolStringArray) var file_urls : PoolStringArray
 
 var _current_url       : String
