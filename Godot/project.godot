@@ -47,7 +47,7 @@ gdscript/warnings/return_value_discarded=false
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/WAT/plugin.cfg", "res://addons/file_downloader/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/file_downloader/plugin.cfg" )
 
 [global]
 
