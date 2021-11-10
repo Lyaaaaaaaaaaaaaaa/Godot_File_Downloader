@@ -29,22 +29,22 @@ in Godot.
 5. Now simply call `$FileDownloader.start_download()` somewhere in your script.
 
 *You alternatively can replace the step 4 and 5 by code*
+
 ```
-var url  : PoolStringArray = ["url_to_file1","url_file_2"]
-var path : String          = "user://downloads"
-$FileDownloader.start_download(url, path)
+var url        : PoolStringArray = ["url_to_file1","url_file_2"]
+var path       : String          = "user://downloads"
+var blind_mode : bool            = false
+$FileDownloader.start_download(url, path, blind_mode)
 ```
 
 The release ships a demo project. Feel free to run it in Godot and explore it.
 
 ## Limitations
 
-For now it seems the FileDownloader doesn't download some files (like .svg)
-This probably comes from the _on_request_completed function which expects to 
-receive specific information. If this information never arrives, it won't start
-the download.
-I should fix this in the future by adding a 'blind' downloading mode. This blind
-mode wouldn't know how big is the file currently downloading until it finishes.
+**This project doesn't work with the 3.4 of Godot** (Only the blind mode works).
+For some downloads you might encounter errors because the downloader fails to receive
+the header. In this case, you need to turn on the blind mode. The blind mode is simplier
+but you will have to manually calculate datas like percentage, size to download, etc.
 
 ## More information:
 
