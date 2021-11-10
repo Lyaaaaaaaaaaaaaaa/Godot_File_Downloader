@@ -44,6 +44,11 @@
 #--
 #--  - 11/10/2021 Lyaaaaa
 #--    - Changed the default value of save_path to user://cache/
+#--
+#--  - 10/11/2021 Lyaaaaa
+#--    - Added blind_mode var.
+#--    - Updated _update_stats and _on_request_completed to control change their
+#--        behavior depending of blind_mode.
 #------------------------------------------------------------------------------
 extends HTTPRequest
 
@@ -52,8 +57,9 @@ signal file_downloaded
 signal downloads_finished
 signal stats_updated
 
-export(String)          var save_path : String = "user://cache/"
-export(PoolStringArray) var file_urls : PoolStringArray
+export(bool)            var blind_mode : bool   = false
+export(String)          var save_path  : String = "user://cache/"
+export(PoolStringArray) var file_urls  : PoolStringArray
 
 var _current_url       : String
 var _current_url_index : int = 0
@@ -126,12 +132,13 @@ func _send_get_request() -> void:
     
 
 func _update_stats() -> void:
-    _calculate_percentage()
-    emit_signal("stats_updated",
-                _downloaded_size,
-                _downloaded_percent,
-                _file_name,
-                _file_size)
+    if blind_mode == false:
+        _calculate_percentage()
+        emit_signal("stats_updated",
+                    _downloaded_size,
+                    _downloaded_percent,
+                    _file_name,
+                    _file_size)
 
 
 func _calculate_percentage() -> void:
@@ -179,7 +186,7 @@ func _on_request_completed(p_result,
                            p_headers,
                            _p_body) -> void:
     if p_result == RESULT_SUCCESS:
-        if _last_method == HTTPClient.METHOD_HEAD:
+        if _last_method == HTTPClient.METHOD_HEAD and blind_mode == false:
             var regex = "(?i)content-length: [0-9]*"
             var size  = _extract_regex_from_header(regex, p_headers.join(' '))
             size = size.right("Content-Length: ")
@@ -188,8 +195,11 @@ func _on_request_completed(p_result,
                 # For some reason, the conversion to integer makes _file_size 
                 #   negative.
                 _file_size = _file_size * -1
-            
             _send_get_request()
+            
+        elif _last_method == HTTPClient.METHOD_HEAD and blind_mode == true:
+            _send_get_request()
+            
         elif _last_method == HTTPClient.METHOD_GET:
             emit_signal("file_downloaded")
             _download_next_file()
