@@ -49,6 +49,7 @@
 #--    - Added blind_mode var.
 #--    - Updated _update_stats and _on_request_completed to control change their
 #--        behavior depending of blind_mode.
+#--    - Updated start_download to allow setting up the blind_mode from parameter.
 #------------------------------------------------------------------------------
 extends HTTPRequest
 
@@ -90,14 +91,17 @@ func _process(_delta) -> void:
     _update_stats()
 
 
-func start_download(p_urls      : PoolStringArray = [],
-                    p_save_path : String          = "") -> void:
+func start_download(p_urls       : PoolStringArray = [],
+                    p_save_path  : String          = "",
+                    p_blind_mode : bool            = false) -> void:
     _create_directory()
     if p_urls.empty() == false:
         file_urls = p_urls
     
     if p_save_path != "":
         save_path = p_save_path
+    
+    blind_mode = p_blind_mode
     
     _download_next_file()
 
