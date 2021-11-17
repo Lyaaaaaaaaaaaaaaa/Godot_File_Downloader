@@ -46,6 +46,9 @@ For some downloads you might encounter errors because the downloader fails to re
 the header. In this case, you need to turn on the blind mode. The blind mode is simplier
 but you will have to manually calculate datas like percentage, size to download, etc.
 
+If the file you are trying to download is above 2Go the addon won't be able to display its size.
+It will just say it is 2Go.
+
 ## More information:
 
 [Code of conduct](https://github.com/Lyaaaaaaaaaaaaaaa/Godot_File_Downloader/blob/master/CODE_OF_CONDUCT.md)
