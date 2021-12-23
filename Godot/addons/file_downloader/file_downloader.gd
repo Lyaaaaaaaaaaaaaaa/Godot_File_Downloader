@@ -50,6 +50,12 @@
 #--    - Updated _update_stats and _on_request_completed to control change their
 #--        behavior depending of blind_mode.
 #--    - Updated start_download to allow setting up the blind_mode from parameter.
+#--
+#--  - 23/12/2021 Lyaaaaa
+#--    - Fixed the 2go limitation by declaring _file_size as a float.
+#--    - Updated _calculate_percentage to remove a now useless conversion to float.
+#--    - Updated _on_request_completed to replace the weird if and size.right by
+#--        size.replace. _file_size = size.to_int() becomes _file_size = size.to_float().
 #------------------------------------------------------------------------------
 extends HTTPRequest
 
@@ -151,7 +157,7 @@ func _calculate_percentage() -> void:
 
     if error == OK:
         _downloaded_size    = _file.get_len()
-        _downloaded_percent = float((_downloaded_size / _file_size)) *100
+        _downloaded_percent = (_downloaded_size / _file_size) *100
         
 
 func _create_directory() -> void:
@@ -193,12 +199,8 @@ func _on_request_completed(p_result,
         if _last_method == HTTPClient.METHOD_HEAD and blind_mode == false:
             var regex = "(?i)content-length: [0-9]*"
             var size  = _extract_regex_from_header(regex, p_headers.join(' '))
-            size = size.right("Content-Length: ")
-            _file_size = size.to_int()
-            if _file_size < 0:
-                # For some reason, the conversion to integer makes _file_size 
-                #   negative.
-                _file_size = _file_size * -1
+            size = size.replace("Content-Length: ", "")
+            _file_size = size.to_float()
             _send_get_request()
             
         elif _last_method == HTTPClient.METHOD_HEAD and blind_mode == true:
