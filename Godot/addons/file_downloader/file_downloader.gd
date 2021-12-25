@@ -56,6 +56,11 @@
 #--    - Updated _calculate_percentage to remove a now useless conversion to float.
 #--    - Updated _on_request_completed to replace the weird if and size.right by
 #--        size.replace. _file_size = size.to_int() becomes _file_size = size.to_float().
+#--
+#--  - 25/12/2021 Lyaaaaa
+#--    - Added _downloads_done function.
+#--    - Updated _on_file_downloaded and _download_next_file to call _downloads_done.
+#--    - The last downloaded file is now closed.
 #------------------------------------------------------------------------------
 extends HTTPRequest
 
@@ -121,6 +126,12 @@ func get_stats() -> Dictionary:
     return dictionnary
     
 
+func _downloads_done() -> void:
+    set_process(false)
+    _update_stats()
+    _file.close()
+    emit_signal("downloads_finished")
+
 func _send_head_request() -> void:
     # The HEAD method only gets the head and not the body. Therefore, doesn't
     #   download the file.
@@ -158,7 +169,7 @@ func _calculate_percentage() -> void:
     if error == OK:
         _downloaded_size    = _file.get_len()
         _downloaded_percent = (_downloaded_size / _file_size) *100
-        
+
 
 func _create_directory() -> void:
     var directory = Directory.new()
@@ -177,9 +188,7 @@ func _download_next_file() -> void:
         _send_head_request()
         _current_url_index += 1  
     else:
-        set_process(false)
-        emit_signal("downloads_finished")
-        _update_stats()
+        _downloads_done()
 
 
 func _extract_regex_from_header(p_regex  : String,
@@ -220,6 +229,4 @@ func _on_file_downloaded() -> void:
         _download_next_file()
     
     else:
-        set_process(false)
-        emit_signal("downloads_finished")
-        _update_stats()
+        _downloads_done()
