@@ -61,6 +61,9 @@
 #--    - Added _downloads_done function.
 #--    - Updated _on_file_downloaded and _download_next_file to call _downloads_done.
 #--    - The last downloaded file is now closed.
+#--
+#--  - 29/12/2021 Lyaaaaa
+#--    - Updated start_download to set p_blind_mode default value to blind_mode.
 #------------------------------------------------------------------------------
 extends HTTPRequest
 
@@ -104,7 +107,7 @@ func _process(_delta) -> void:
 
 func start_download(p_urls       : PoolStringArray = [],
                     p_save_path  : String          = "",
-                    p_blind_mode : bool            = false) -> void:
+                    p_blind_mode : bool            = blind_mode) -> void:
     _create_directory()
     if p_urls.empty() == false:
         file_urls = p_urls
