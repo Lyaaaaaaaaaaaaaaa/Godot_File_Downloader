@@ -1,6 +1,7 @@
 # Godot_File_Downloader
 ---
 
+![](file_downloader.gif)
 
 ## What does this project do?
 This project is a class for downloading files (through http) and supporting a progress bar.
