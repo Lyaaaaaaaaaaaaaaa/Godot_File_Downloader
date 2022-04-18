@@ -12,6 +12,7 @@
 #--  - Get rid of the _process function and let the user manually call get_stats
 #--      (which would call _update_stats) on purpose instead of spaming the 
 #--      stats_updated signal.
+#--  - Delete the blind mode (seriously it's useless)
 #--
 #-- Changelog:
 #--  - 15/09/2021 Lyaaaaa
@@ -62,8 +63,9 @@
 #--    - Updated _on_file_downloaded and _download_next_file to call _downloads_done.
 #--    - The last downloaded file is now closed.
 #--
-#--  - 29/12/2021 Lyaaaaa
-#--    - Updated start_download to set p_blind_mode default value to blind_mode.
+#--  - 18/04/2022 Lyaaaaa
+#--    - Added a _reset method to re-use the downloader after it had been used.
+#--    - Updated _downloads_done to call _reset.
 #------------------------------------------------------------------------------
 extends HTTPRequest
 
@@ -107,7 +109,7 @@ func _process(_delta) -> void:
 
 func start_download(p_urls       : PoolStringArray = [],
                     p_save_path  : String          = "",
-                    p_blind_mode : bool            = blind_mode) -> void:
+                    p_blind_mode : bool            = false) -> void:
     _create_directory()
     if p_urls.empty() == false:
         file_urls = p_urls
@@ -129,11 +131,20 @@ func get_stats() -> Dictionary:
     return dictionnary
     
 
+func _reset() -> void:
+    _current_url = ""
+    _current_url_index = 0
+    _downloaded_percent = 0
+    _downloaded_size = 0
+
+
 func _downloads_done() -> void:
     set_process(false)
     _update_stats()
     _file.close()
     emit_signal("downloads_finished")
+    _reset()
+    
 
 func _send_head_request() -> void:
     # The HEAD method only gets the head and not the body. Therefore, doesn't
