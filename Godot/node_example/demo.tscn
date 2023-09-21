@@ -11,6 +11,7 @@ offset_right = 0.503967
 script = ExtResource("2")
 
 [node name="FileDownloader" type="HTTPRequest" parent="."]
+use_threads = true
 script = ExtResource("1")
 file_urls = PackedStringArray("https://godotengine.org/assets/home/features/cross-platform.svg", "https://godotengine.org/assets/home/features/oss.svg")
 
