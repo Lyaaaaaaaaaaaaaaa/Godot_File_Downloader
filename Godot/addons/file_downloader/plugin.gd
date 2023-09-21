@@ -1,16 +1,16 @@
+@tool
 #------------------------------------------------------------------------------
 #-- Copyright (c) 2021 Lyaaaaaaaaaaaaaaa
 #--
 #-- Author : Lyaaaaaaaaaaaaaaa
 #--
 #-- Implementation Notes:
-#--  - 
+#--  -
 #--
 #-- Changelog:
 #--  - 04/10/2021 Lyaaaaa
 #--    - Created the file.
 #------------------------------------------------------------------------------
-tool
 extends EditorPlugin
 
 
