@@ -69,6 +69,7 @@
 #--
 #--  - 21/09/2023 Lyaaaaa
 #--    - Upgraded the code to work with Godot 4
+#--    - Purged everything related to the "blind mode".
 #------------------------------------------------------------------------------
 extends HTTPRequest
 
@@ -77,7 +78,6 @@ signal file_downloaded
 signal downloads_finished
 signal stats_updated
 
-@export var blind_mode: bool   = false
 @export var save_path: String = "user://cache/"
 @export var file_urls: PackedStringArray
 
@@ -110,16 +110,13 @@ func _process(_delta) -> void:
 
 
 func start_download(p_urls       : PackedStringArray = [],
-                    p_save_path  : String          = "",
-                    p_blind_mode : bool            = false) -> void:
+                    p_save_path  : String          = "") -> void:
     _create_directory()
     if p_urls.is_empty() == false:
         file_urls = p_urls
 
     if p_save_path != "":
         save_path = p_save_path
-
-    blind_mode = p_blind_mode
 
     _download_next_file()
 
@@ -169,13 +166,12 @@ func _send_get_request() -> void:
 
 
 func _update_stats() -> void:
-    if blind_mode == false:
-        _calculate_percentage()
-        emit_signal("stats_updated",
-                    _downloaded_size,
-                    _downloaded_percent,
-                    _file_name,
-                    _file_size)
+    _calculate_percentage()
+    emit_signal("stats_updated",
+                _downloaded_size,
+                _downloaded_percent,
+                _file_name,
+                _file_size)
 
 
 func _calculate_percentage() -> void:
@@ -225,14 +221,11 @@ func _on_request_completed(p_result,
                            p_headers,
                            _p_body) -> void:
     if p_result == RESULT_SUCCESS:
-        if _last_method == HTTPClient.METHOD_HEAD and blind_mode == false:
+        if _last_method == HTTPClient.METHOD_HEAD:
             var regex = "(?i)content-length: [0-9]*"
             var size  = _extract_regex_from_header(regex, ' '.join(p_headers))
             size = size.replace("Content-Length: ", "")
             _file_size = size.to_float()
-            _send_get_request()
-
-        elif _last_method == HTTPClient.METHOD_HEAD and blind_mode == true:
             _send_get_request()
 
         elif _last_method == HTTPClient.METHOD_GET:
