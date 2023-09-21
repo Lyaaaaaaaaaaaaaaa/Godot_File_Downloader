@@ -34,8 +34,7 @@ in Godot.
 ```
 var url        : PoolStringArray = ["url_to_file1","url_file_2"]
 var path       : String          = "user://downloads"
-var blind_mode : bool            = false
-$FileDownloader.start_download(url, path, blind_mode)
+$FileDownloader.start_download(url, path)
 ```
 
 The release ships a demo project. Feel free to run it in Godot and explore it.
