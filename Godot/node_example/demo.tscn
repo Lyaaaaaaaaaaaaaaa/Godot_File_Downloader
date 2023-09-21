@@ -1,62 +1,49 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=3 format=3 uid="uid://ch2pbs5uy47l"]
 
-[ext_resource path="res://addons/file_downloader/file_downloader.gd" type="Script" id=1]
-[ext_resource path="res://node_example/demo.gd" type="Script" id=2]
+[ext_resource type="Script" path="res://addons/file_downloader/file_downloader.gd" id="1"]
+[ext_resource type="Script" path="res://node_example/demo.gd" id="2"]
 
 [node name="Control" type="Panel"]
+anchors_preset = -1
 anchor_right = 0.479
 anchor_bottom = 0.555
-margin_right = 0.503967
-script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_right = 0.503967
+script = ExtResource("2")
 
 [node name="FileDownloader" type="HTTPRequest" parent="."]
-script = ExtResource( 1 )
-file_urls = PoolStringArray( "https://godotengine.org/themes/godotengine/assets/features/3dgames.jpg", "https://godotengine.org/themes/godotengine/assets/features/2dgames.jpg", "https://godotengine.org/themes/godotengine/assets/features/animate.jpg", "https://godotengine.org/themes/godotengine/assets/features/xrsupport.jpg" )
+use_threads = true
+script = ExtResource("1")
+file_urls = PackedStringArray("https://godotengine.org/assets/home/features/cross-platform.svg", "https://godotengine.org/assets/home/features/oss.svg")
 
 [node name="Button" type="Button" parent="."]
-margin_left = 134.036
-margin_top = 193.127
-margin_right = 341.036
-margin_bottom = 257.127
+layout_mode = 0
+offset_left = 134.036
+offset_top = 193.127
+offset_right = 341.036
+offset_bottom = 257.127
 text = "Start download"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="ProgressBar" type="ProgressBar" parent="."]
-margin_left = 115.056
-margin_top = 119.168
-margin_right = 372.056
-margin_bottom = 167.168
+layout_mode = 0
+offset_left = 115.056
+offset_top = 119.168
+offset_right = 372.056
+offset_bottom = 167.168
 step = 1.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label" type="Label" parent="."]
-margin_left = 151.888
-margin_top = 72.3826
-margin_right = 332.888
-margin_bottom = 109.383
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 0
+offset_left = 151.888
+offset_top = 72.3826
+offset_right = 332.888
+offset_bottom = 109.383
 
 [node name="Label2" type="Label" parent="."]
-margin_left = 167.673
-margin_top = 271.617
-margin_right = 312.673
-margin_bottom = 311.617
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 0
+offset_left = 167.673
+offset_top = 271.617
+offset_right = 312.673
+offset_bottom = 311.617
 
 [connection signal="downloads_finished" from="FileDownloader" to="." method="_on_FileDownloader_downloads_finished"]
 [connection signal="downloads_started" from="FileDownloader" to="." method="_on_FileDownloader_downloads_started"]
