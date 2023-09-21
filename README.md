@@ -40,9 +40,16 @@ $FileDownloader.start_download(url, path, blind_mode)
 
 The release ships a demo project. Feel free to run it in Godot and explore it.
 
-## Limitations godot < 3.4.3
+## Limitations
+
+### Webp
+
+Downloading Webp files doesn't work.
+
+### godot < 3.4.3
 
 If the file you are trying to download is above 2.1GB the addon will just say it is 2.1GB and fails downloading it past 2.1GB.
+See issue: https://github.com/godotengine/godot/issues/56314
 
 ## More information:
 
