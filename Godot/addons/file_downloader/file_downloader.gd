@@ -70,7 +70,21 @@
 #--  - 21/09/2023 Lyaaaaa
 #--    - Upgraded the code to work with Godot 4
 #--    - Purged everything related to the "blind mode".
+#--
+#--  - 10/11/2023 Lyaaaaa
+#--    - The script is now a class named "FileDownloader".
+#--    - Added _downloading attribute and is_downloading getter.
+#--    - Updated start_download to be cleaner.
+#--    - Updated _reset to reset _downloading value.
+#--    - Updated _downloads_done to verify if _file exists before closing it.
+#--        (it might not exist if every file is moved right after being downloaded)
+#--    - Updated _send_get_request to set _downloading to true.
+#--    - Updated _create_directory to actually create the save path.
+#--    - Updated _calculate_percentage and _download_next_file to use path_join
+#--        to concatenate the save path and file name. Way safer than +.
+#--    - _on_request_completed now emits file_downloaded with _file_name as argument.
 #------------------------------------------------------------------------------
+class_name FileDownloader
 extends HTTPRequest
 
 signal downloads_started
@@ -78,7 +92,7 @@ signal file_downloaded
 signal downloads_finished
 signal stats_updated
 
-@export var save_path: String = "user://cache/"
+@export var save_path: String = "user://cache/test/test"
 @export var file_urls: PackedStringArray
 
 var _current_url       : String
@@ -95,10 +109,14 @@ var _downloaded_size    : float = 0
 
 var _last_method : int
 
+var _downloading : bool = false:
+    get = is_downloading
+
 
 func _init() -> void:
     set_process(false)
     connect("request_completed", Callable(self, "_on_request_completed"))
+    OS.shell_show_in_file_manager(ProjectSettings.globalize_path("user://"))
 
 
 func _ready() -> void:
@@ -109,15 +127,11 @@ func _process(_delta) -> void:
     _update_stats()
 
 
-func start_download(p_urls       : PackedStringArray = [],
-                    p_save_path  : String          = "") -> void:
+func start_download(p_urls       : PackedStringArray = file_urls,
+                    p_save_path  : String = save_path) -> void:
+    file_urls = p_urls
+    save_path = p_save_path
     _create_directory()
-    if p_urls.is_empty() == false:
-        file_urls = p_urls
-
-    if p_save_path != "":
-        save_path = p_save_path
-
     _download_next_file()
 
 
@@ -130,17 +144,23 @@ func get_stats() -> Dictionary:
     return dictionnary
 
 
+func is_downloading() -> bool:
+    return _downloading
+
+
 func _reset() -> void:
     _current_url = ""
     _current_url_index = 0
     _downloaded_percent = 0
     _downloaded_size = 0
+    _downloading = false
 
 
 func _downloads_done() -> void:
     set_process(false)
     _update_stats()
-    _file.close()
+    if _file:
+        _file.close()
     emit_signal("downloads_finished")
     _reset()
 
@@ -156,6 +176,7 @@ func _send_get_request() -> void:
     var error = request(_current_url, _headers, HTTPClient.METHOD_GET)
     if error == OK:
         emit_signal("downloads_started")
+        _downloading = true
         _last_method = HTTPClient.METHOD_GET
         set_process(true)
 
@@ -176,7 +197,7 @@ func _update_stats() -> void:
 
 func _calculate_percentage() -> void:
     var error : int
-    _file = FileAccess.open(save_path + _file_name, FileAccess.READ)
+    _file = FileAccess.open(save_path.path_join(_file_name), FileAccess.READ)
     error = FileAccess.get_open_error()
 
     if error == OK:
@@ -185,17 +206,15 @@ func _calculate_percentage() -> void:
 
 
 func _create_directory() -> void:
-    var directory = DirAccess.open(save_path)
-
-    if directory:
-        directory.make_dir(save_path)
+    if not DirAccess.dir_exists_absolute(save_path):
+        DirAccess.make_dir_recursive_absolute(save_path)
 
 
 func _download_next_file() -> void:
     if _current_url_index < file_urls.size():
         _current_url  = file_urls[_current_url_index]
         _file_name    = _current_url.get_file()
-        download_file = save_path + _file_name
+        download_file = save_path.path_join(_file_name)
         _send_head_request()
         _current_url_index += 1
     else:
@@ -229,7 +248,7 @@ func _on_request_completed(p_result,
             _send_get_request()
 
         elif _last_method == HTTPClient.METHOD_GET:
-            emit_signal("file_downloaded")
+            emit_signal("file_downloaded", _file_name)
             _download_next_file()
     else:
         print("HTTP Request error: ", p_result)
