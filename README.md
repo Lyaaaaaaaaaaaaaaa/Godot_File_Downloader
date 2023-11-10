@@ -22,6 +22,8 @@ in Godot.
 
 ## How to use?
 
+### With little code
+
 1. Add a new node to your scene
 2. Search for FileDownloader (It is a child of HTTPRequest)
 3. Add a FileDownloader node in your scene
@@ -32,11 +34,25 @@ in Godot.
 *You alternatively can replace the step 4 and 5 by code*
 
 ```
-var url        : PoolStringArray = ["url_to_file1","url_file_2"]
+var urls       : PoolStringArray = ["url_to_file1","url_file_2"]
 var path       : String          = "user://downloads"
-var blind_mode : bool            = false
-$FileDownloader.start_download(url, path, blind_mode)
+$FileDownloader.start_download(urls, path)
 ```
+
+### With code only
+
+You might want to use code only if you use an autoload to manage the downloads.
+
+```
+var _downloader = FileDownloader.new()
+var urls : PoolStringArray = ["url_to_file1","url_file_2"]
+var path : String = "user://downloads"
+
+add_child(_downloader) # It's REQUIRED to add the node to the scene tree because the download won't work otherwise
+_downloader.start_download(urls, path)
+```
+
+## Demo
 
 The release ships a demo project. Feel free to run it in Godot and explore it.
 
