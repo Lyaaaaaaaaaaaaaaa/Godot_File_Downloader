@@ -92,7 +92,7 @@ signal file_downloaded
 signal downloads_finished
 signal stats_updated
 
-@export var save_path: String = "user://cache/test/test"
+@export var save_path: String = "user://cache/"
 @export var file_urls: PackedStringArray
 
 var _current_url       : String
