@@ -116,7 +116,6 @@ var _downloading : bool = false:
 func _init() -> void:
     set_process(false)
     connect("request_completed", Callable(self, "_on_request_completed"))
-    OS.shell_show_in_file_manager(ProjectSettings.globalize_path("user://"))
 
 
 func _ready() -> void:
