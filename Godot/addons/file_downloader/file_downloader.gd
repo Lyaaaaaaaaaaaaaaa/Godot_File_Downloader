@@ -83,6 +83,9 @@
 #--    - Updated _calculate_percentage and _download_next_file to use path_join
 #--        to concatenate the save path and file name. Way safer than +.
 #--    - _on_request_completed now emits file_downloaded with _file_name as argument.
+#--
+#--   - 15/11/2023 Lyaaaaa
+#--    - Updated _downloads_done to call _reset before emitting "downloads_finished"
 #------------------------------------------------------------------------------
 class_name FileDownloader
 extends HTTPRequest
@@ -158,10 +161,10 @@ func _reset() -> void:
 func _downloads_done() -> void:
     set_process(false)
     _update_stats()
+    _reset()
     if _file:
         _file.close()
     emit_signal("downloads_finished")
-    _reset()
 
 
 func _send_head_request() -> void:
