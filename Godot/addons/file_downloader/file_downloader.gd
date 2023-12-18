@@ -86,6 +86,9 @@
 #--
 #--   - 15/11/2023 Lyaaaaa
 #--    - Updated _downloads_done to call _reset before emitting "downloads_finished"
+#--
+#--   - 18/12/2023 Lyaaaaa
+#--    - Replaced the prints by push_error when needed.
 #------------------------------------------------------------------------------
 class_name FileDownloader
 extends HTTPRequest
@@ -183,9 +186,9 @@ func _send_get_request() -> void:
         set_process(true)
 
     elif error == ERR_INVALID_PARAMETER:
-        print("Given string isn't a valid url ")
+        push_error("Given string isn't a valid url: ", _current_url)
     elif error == ERR_CANT_CONNECT:
-        print("Can't connect to host")
+        push_error("Can't connect to host")
 
 
 func _update_stats() -> void:
@@ -253,7 +256,7 @@ func _on_request_completed(p_result,
             emit_signal("file_downloaded", _file_name)
             _download_next_file()
     else:
-        print("HTTP Request error: ", p_result)
+        push_error("HTTP Request error: ", p_result)
 
 
 func _on_file_downloaded() -> void:
