@@ -89,6 +89,14 @@
 #--
 #--   - 18/12/2023 Lyaaaaa
 #--    - Replaced the prints by push_error when needed.
+#--    - Replaced the _downloading var by _is_busy.
+#--    - Added is_busy method.
+#--    - is_downloading is now depreciated and calls is_busy.
+#--    - Updated _download_next_file to set busy to true.
+#--
+#--   - 05/02/2024 Lyaaaaa
+#--    - Added use_threads = true in _init to always have it on. It is important
+#--        for download speed
 #------------------------------------------------------------------------------
 class_name FileDownloader
 extends HTTPRequest
@@ -115,11 +123,13 @@ var _downloaded_size    : float = 0
 
 var _last_method : int
 
-var _downloading : bool = false:
-    get = is_downloading
+var _busy : bool = false:
+    get = is_busy,
+    set = set_busy
 
 
 func _init() -> void:
+    use_threads = true
     set_process(false)
     connect("request_completed", Callable(self, "_on_request_completed"))
 
@@ -137,7 +147,8 @@ func start_download(p_urls       : PackedStringArray = file_urls,
     file_urls = p_urls
     save_path = p_save_path
     _create_directory()
-    _download_next_file()
+    if not is_busy():
+        _download_next_file()
 
 
 func get_stats() -> Dictionary:
@@ -150,7 +161,15 @@ func get_stats() -> Dictionary:
 
 
 func is_downloading() -> bool:
-    return _downloading
+    # Depreciated. Will be removed in next release
+    return is_busy()
+
+
+func is_busy() -> bool:
+    return _busy
+
+func set_busy(p_busy : bool) -> void:
+    _busy = p_busy
 
 
 func _reset() -> void:
@@ -158,7 +177,7 @@ func _reset() -> void:
     _current_url_index = 0
     _downloaded_percent = 0
     _downloaded_size = 0
-    _downloading = false
+    set_busy(false)
 
 
 func _downloads_done() -> void:
@@ -181,7 +200,6 @@ func _send_get_request() -> void:
     var error = request(_current_url, _headers, HTTPClient.METHOD_GET)
     if error == OK:
         emit_signal("downloads_started")
-        _downloading = true
         _last_method = HTTPClient.METHOD_GET
         set_process(true)
 
@@ -217,6 +235,7 @@ func _create_directory() -> void:
 
 func _download_next_file() -> void:
     if _current_url_index < file_urls.size():
+        set_busy(true)
         _current_url  = file_urls[_current_url_index]
         _file_name    = _current_url.get_file()
         download_file = save_path.path_join(_file_name)
@@ -269,3 +288,4 @@ func _on_file_downloaded() -> void:
 
     else:
         _downloads_done()
+

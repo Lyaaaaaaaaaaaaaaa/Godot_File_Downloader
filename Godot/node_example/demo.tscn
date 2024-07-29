@@ -13,7 +13,6 @@ script = ExtResource("2")
 [node name="FileDownloader" type="HTTPRequest" parent="."]
 use_threads = true
 script = ExtResource("1")
-save_path = "user://cache/"
 file_urls = PackedStringArray("https://godotengine.org/assets/home/features/cross-platform.svg", "https://godotengine.org/assets/home/features/oss.svg", "https://godotengine.org/assets/showcase/dome-keeper.jpg", "https://godotengine.org/assets/showcase/brotato-2.jpg")
 
 [node name="Button" type="Button" parent="."]
