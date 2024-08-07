@@ -30,8 +30,8 @@ some doc, scripts, Github actions,  giving some design advice or even suggestion
 
 ## How can you get in touch with me?
 You can start a discussion in the **discussions** tab or you can join my 
-[Discord server](https://discord.gg/hSey9Bv).
-If you are more old school you can send me an email at lyaaaaaaaaaaaaaaa@protonmail.com :).
+[Discord server](https://discord.gg/mJGSkJ3mgT).
+If you are more old school you can send me an email at lyaaaaa@lyaaaaagames.com :).
 
 ## Useful resources
 
